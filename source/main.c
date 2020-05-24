@@ -1,11 +1,13 @@
 /*	Author: Patrick Dang
  *  	Partner(s) Name: 
  *	Lab Section: 028
- *	Assignment: Lab #10  Exercise #1
+ *	Assignment: Lab #10  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
+ *
+ *	Video Link:
  */
 #include <avr/io.h>
 #include "timer.h"
@@ -115,20 +117,33 @@ int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRB = 0xFF; PORTB = 0x00;
 
-	TimerSet(1000);
+	unsigned long BL_elapsedTime = 0;
+	unsigned long TL_elapsedTime = 0;
+	const unsigned long timerPeriod = 100;
+
+	TimerSet(timerPeriod);
 	TimerOn();
 
 	BL_State = BL_SMStart;
 	TL_State = TL_SMStart;
+	CL_State = Combine_LED;
 	blinkingLED = 0x00;
 	threeLEDS = 0x00;
     /* Insert your solution below */
     while (1) {
-	TickFct_BlinkLed();
-	TickFct_ThreeLeds();
+	if(BL_elapsedTime >= 1000){
+		TickFct_BlinkLed();
+		BL_elapsedTime = 0;
+	}
+	if(TL_elapsedTime >= 300){
+		TickFct_ThreeLeds();
+		TL_elapsedTime = 0;
+	}
 	TickFct_CombineLeds();
 	while(!TimerFlag){}
 	TimerFlag = 0;
+	BL_elapsedTime += timerPeriod;
+	TL_elapsedTime += timerPeriod;
     }
     return 1;
 }
