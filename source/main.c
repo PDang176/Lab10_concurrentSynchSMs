@@ -7,7 +7,7 @@
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  *
- *	Video Link:
+ *	Video Link: https://drive.google.com/open?id=19xJtFcB3sYsdMAjCOVhxQh8udndeURxa
  */
 #include <avr/io.h>
 #include "timer.h"
@@ -101,10 +101,10 @@ void TickFct_PlaySound(){
 			PS_State = PS_OFF;
 			break;
 		case PS_OFF:
-			PS_State = (~PINA & 0x02) ? PS_ON : PS_OFF;
+			PS_State = (~PINA & 0x04) ? PS_ON : PS_OFF;
 			break;
 		case PS_ON:
-			PS_State = (~PINA & 0x02) ? PS_ON : PS_OFF;
+			PS_State = (~PINA & 0x04) ? PS_ON : PS_OFF;
 		default:
 			PS_State = PS_SMStart;
 			break;
@@ -144,9 +144,12 @@ void TickFct_AdjustFrequency(){
 			}
 			break;
 		case AF_UP:
+			AF_State = (~PINA & 0x01) ? AF_HOLD : AF_Wait;
+			break;
 		case AF_DOWN:
+			AF_State = (~PINA & 0x02) ? AF_HOLD : AF_Wait;
 		case AF_HOLD:
-			AF_State = (~PINA) ? AF_HOLD : AF_Wait;
+			AF_State = ((~PINA & 0x01) || (~PINA & 0x02)) ? AF_HOLD : AF_Wait;
 			break;
 		default:
 			AF_State = AF_SMStart;
@@ -155,6 +158,7 @@ void TickFct_AdjustFrequency(){
 	//State Actions
 	switch(AF_State){
                 case AF_SMStart:
+			break;
                 case AF_Wait:
 			break;
                 case AF_UP:
@@ -164,6 +168,7 @@ void TickFct_AdjustFrequency(){
 			frequency = (frequency > 1) ? frequency - 1 : frequency;
 			break;
                 case AF_HOLD:
+			break;
                 default:
 			break;
         }
@@ -230,6 +235,7 @@ int main(void) {
 		TickFct_PlaySound();
 		PS_elapsedTime = 0;
 	}
+	TickFct_AdjustFrequency();
 	TickFct_CombineLeds();
 	while(!TimerFlag){}
 	TimerFlag = 0;
