@@ -1,7 +1,7 @@
 /*	Author: Patrick Dang
  *  	Partner(s) Name: 
  *	Lab Section: 028
- *	Assignment: Lab #10  Exercise #4
+ *	Assignment: Lab #10  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -18,7 +18,6 @@
 unsigned char blinkingLED;
 unsigned char threeLEDS;
 unsigned char speaker;
-unsigned char frequency;
 
 enum BL_States{BL_SMStart, BL_OFF, BL_ON}BL_State;
 
@@ -133,21 +132,10 @@ void TickFct_AdjustFrequency(){
 			AF_State = AF_Wait;
 			break;
 		case AF_Wait:
-			if((~PINA & 0x01) && ((~PINA & 0x02) == 0x00)){
-				AF_State = AF_UP;
-			}
-			else if(((~PINA & 0x01) == 0x00) && (~PINA & 0x02)){
-				AF_State = AF_DOWN;
-			}
-			else{
-				AF_State = AF_Wait;
-			}
-			break;
+			if(~PINA & 0x01
 		case AF_UP:
 		case AF_DOWN:
 		case AF_HOLD:
-			AF_State = (~PINA) ? AF_HOLD : AF_Wait;
-			break;
 		default:
 			AF_State = AF_SMStart;
 			break;
@@ -156,13 +144,8 @@ void TickFct_AdjustFrequency(){
 	switch(AF_State){
                 case AF_SMStart:
                 case AF_Wait:
-			break;
                 case AF_UP:
-			frequency++;
-			break;
                 case AF_DOWN:
-			frequency = (frequency > 1) ? frequency - 1 : frequency;
-			break;
                 case AF_HOLD:
                 default:
 			break;

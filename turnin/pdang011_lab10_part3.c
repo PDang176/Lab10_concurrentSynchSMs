@@ -7,7 +7,7 @@
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  *
- *	Video Link: https://drive.google.com/open?id=19ad0BpMI6RPbCVwgusEPyuqkKYj8E9K3
+ *	Video Link: https://drive.google.com/open?id=19rxCap_8Lg7lTCfnZlUAR82dweX5KMCv 
  */
 #include <avr/io.h>
 #include "timer.h"
@@ -100,10 +100,10 @@ void TickFct_PlaySound(){
 			PS_State = PS_OFF;
 			break;
 		case PS_OFF:
-			PS_State = (~PINA & 0x02) ? PS_ON : PS_OFF;
+			PS_State = (~PINA & 0x04) ? PS_ON : PS_OFF;
 			break;
 		case PS_ON:
-			PS_State = (~PINA & 0x02) ? PS_ON : PS_OFF;
+			PS_State = (~PINA & 0x04) ? PS_ON : PS_OFF;
 		default:
 			PS_State = PS_SMStart;
 			break;
